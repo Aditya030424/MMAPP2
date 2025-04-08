@@ -29,6 +29,7 @@ class SavingsAdapter:ListAdapter<SavingsEntity, SavingsAdapter.SavingsViewHolder
 
         fun bind(item: SavingsEntity)
         {
+
             savingsItemTv1.text=item.deed
             savingsItemTv2.text="+"+item.amount.toString()
         }
@@ -45,5 +46,4 @@ class SavingsAdapter:ListAdapter<SavingsEntity, SavingsAdapter.SavingsViewHolder
         val item=getItem(position)
         holder.bind(item)
     }
-
 }
