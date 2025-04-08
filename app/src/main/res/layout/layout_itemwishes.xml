@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="10dp"
+    app:cardBackgroundColor="@color/white"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="5dp"
+        android:orientation="horizontal"
+        android:weightSum="11">
+        <Button
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="+"
+            android:id="@+id/plusButton"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1">
+        </Button>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:id="@+id/wishesItemTv1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text=""
+            android:layout_weight="7">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/wishesItemTv2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+        </TextView>
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/checkBox"
+            android:clickable="true"
+            android:layout_weight="1">
+        </CheckBox>
+
+    </LinearLayout>
+
+
+
+
+</androidx.cardview.widget.CardView>

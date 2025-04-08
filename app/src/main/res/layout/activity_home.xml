@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/openSavingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Savings" />
+
+    <Button
+        android:id="@+id/openWishesButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Wishes" />
+    <Button
+        android:id="@+id/getIpButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get IP" />
+    <Button
+        android:id="@+id/postApiButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="post api"/>
+
+</LinearLayout>
