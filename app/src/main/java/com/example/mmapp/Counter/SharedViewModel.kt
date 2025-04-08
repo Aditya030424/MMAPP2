@@ -50,4 +50,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val counterPrefButton=_counterPrefButton
     private var _counterCheckBox:MutableLiveData<Int> = MutableLiveData(0)
     val counterCheckBox=_counterCheckBox
+    private var _counterSavingsScroll:MutableLiveData<Int> = MutableLiveData(0)
+    val counterSavingsScroll:MutableLiveData<Int> = _counterSavingsScroll
+    private var _counterWishesScroll:MutableLiveData<Int> = MutableLiveData(0)
+    val counterWishesScroll:MutableLiveData<Int> = _counterWishesScroll
 }

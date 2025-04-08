@@ -2,6 +2,7 @@ package com.example.mmapp.Savings
 
 import android.app.Application
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,22 +10,43 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mmapp.Counter.AppViewModelFactory
+import com.example.mmapp.Counter.JsonLog
+import com.example.mmapp.Counter.SharedViewModel
 import com.example.mmapp.Database.SavingsAndWishesDB
 import com.example.mmapp.Database.SavingsAndWishesRepository
 import com.example.mmapp.Database.SavingsAndWishesViewModel
 import com.example.mmapp.Database.SavingsAndWishesViewModelFactory
 import com.example.mmapp.R
+import com.google.gson.GsonBuilder
 
 class SavingsFragment(val application:Application): Fragment() {
     private var layoutId:Int?=null
+    private var previousActivity:String?=null
+    private lateinit var sharedViewModel: SharedViewModel
 
+    private lateinit var saving:String
+    val gson = GsonBuilder().setPrettyPrinting().create()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             layoutId=it.getInt(ARG_LAYOUT_ID)
+            previousActivity=it.getString("Previous Activity")
         }
+        val appViewModelFactory = AppViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
 
+        sharedViewModel.counterSavingsScroll.observe(this)
+        {
+            if(it>0)
+            {
+                val message= JsonLog("Scroll to New Item:$saving",it.toString().toInt(),previousActivity!!,false)
+                val jsonString = gson.toJson(message)
+                Log.d("Tracking", jsonString)
+            }
+        }
     }
 
     override fun onCreateView(
@@ -44,11 +66,12 @@ class SavingsFragment(val application:Application): Fragment() {
             SavingsAndWishesViewModelFactory(repository,application)
         }
 
+
         if(layoutId==R.layout.layout_savingsrv) {
             val savingsRv =
                 view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.savingsRv)
             savingsRv.layoutManager = LinearLayoutManager(application)
-            val savingsAdapter = SavingsAdapter()
+            val savingsAdapter = SavingsAdapter({savingsEntity-> onScroll(savingsEntity)})
             savingsRv.adapter = savingsAdapter
 
             savingsAndWishesViewModel.allSavings.observe(
@@ -69,16 +92,23 @@ class SavingsFragment(val application:Application): Fragment() {
             })
 
         }
+
+    }
+    fun onScroll(savingsEntity: SavingsEntity)
+    {
+        saving=savingsEntity.deed
+        sharedViewModel.counterSavingsScroll.value=sharedViewModel.counterSavingsScroll.value?.plus(1)
     }
 
     companion object
     {
         const val ARG_LAYOUT_ID="layoutId"
-        fun newInstance(layoutId:Int,application: Application): SavingsFragment
+        fun newInstance(layoutId:Int,application: Application,previousActivity:String?): SavingsFragment
         {
             val fragment = SavingsFragment(application)
             val args= Bundle()
             args.putInt(ARG_LAYOUT_ID,layoutId)
+            args.putString("Previous Activity",previousActivity)
             fragment.arguments=args
             return fragment
         }
