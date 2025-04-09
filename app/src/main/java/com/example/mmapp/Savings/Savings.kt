@@ -7,6 +7,7 @@ import android.widget.EditText
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.mmapp.AHome.Constants
 import com.example.mmapp.Counter.AppViewModelFactory
 import com.example.mmapp.Counter.JsonLog
 import com.example.mmapp.Counter.SharedViewModel
@@ -19,14 +20,17 @@ import com.google.gson.GsonBuilder
 
 class Savings:AppCompatActivity() {
     private lateinit var sharedViewModel: SharedViewModel
+    val SAVINGS_FRAGMENT_CONTAINER_ID=R.id.savingsFragmentContainer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_savings)
+        val tag= Constants.TAG
         val appViewModelFactory = AppViewModelFactory(application)
+        val previousActivity=intent.getStringExtra("Previous Activity")
         sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
         supportFragmentManager.beginTransaction().add(
-            R.id.savingsFragmentContainer,
-            SavingsFragment.newInstance(R.layout.layout_savingsrv,application,intent.getStringExtra("Previous Activity"))
+            SAVINGS_FRAGMENT_CONTAINER_ID,
+            SavingsFragment.newInstance(R.layout.layout_savingsrv,application,previousActivity)
         ).commit()
 
         val addSavingsButton=findViewById<Button>(R.id.addSavingsButton)
@@ -37,25 +41,31 @@ class Savings:AppCompatActivity() {
         val savingsAndWishesViewModel by viewModels<SavingsAndWishesViewModel> {
             SavingsAndWishesViewModelFactory(repository,application)
         }
+        lateinit var message:JsonLog
+        lateinit var jsonString:String
+        lateinit var deed:String
+        var amount:Int
+        val savingEditText=findViewById<EditText>(R.id.saving)
+        val savingAmountEditText=findViewById<EditText>(R.id.savingAmount)
         sharedViewModel.counterSavings.observe(this) {
             if (it > 0) {
-                val message=JsonLog("Savings Activity Opened",it.toString().toInt(),"No Previous Activity")
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking", jsonString)
+                message=JsonLog("Savings Activity Opened",it.toInt(),previousActivity)
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
             }
         }
         sharedViewModel.counterAddSavings.observe(this) {
             if (it > 0) {
-                val message=JsonLog("AddSavings Button pressed",it.toString().toInt(),"Savings",true)
-                val jsonString = gson.toJson(message)
-            Log.d("Tracking",jsonString)
+                message=JsonLog("AddSavings Button pressed",it.toInt(),previousActivity,true)
+                jsonString = gson.toJson(message)
+            Log.d(tag,jsonString)
         }
             }
         sharedViewModel.counterShowTotal.observe(this) {
             if (it > 0) {
-                val message=JsonLog("ShowTotal Button pressed",it.toString().toInt(),"Savings",true)
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking",jsonString)
+                message=JsonLog("ShowTotal Button pressed",it.toInt(),previousActivity,true)
+                jsonString = gson.toJson(message)
+                Log.d(tag,jsonString)
 
 
             }
@@ -63,12 +73,12 @@ class Savings:AppCompatActivity() {
 
         addSavingsButton.setOnClickListener {
             sharedViewModel.counterAddSavings.value=sharedViewModel.counterAddSavings.value?.plus(1)
-            val deed=findViewById<EditText>(R.id.saving).text.toString()
-            val amount=findViewById<EditText>(R.id.savingAmount).text.toString().toInt()
+            deed=savingEditText.text.toString()
+            amount=savingAmountEditText.text.toString().toInt()
             savingsAndWishesViewModel.insertSavings(SavingsEntity(deed=deed,amount=amount))
             supportFragmentManager.beginTransaction().replace(
-                R.id.savingsFragmentContainer,
-                SavingsFragment.newInstance(R.layout.layout_savingsrv,application,intent.getStringExtra("Previous Activity"))
+                SAVINGS_FRAGMENT_CONTAINER_ID,
+                SavingsFragment.newInstance(R.layout.layout_savingsrv,application,previousActivity)
             ).commit()
         }
 
@@ -78,8 +88,8 @@ class Savings:AppCompatActivity() {
             sharedViewModel.counterShowTotal.value=sharedViewModel.counterShowTotal.value?.plus(1)
 
             supportFragmentManager.beginTransaction().replace(
-                R.id.savingsFragmentContainer,
-                SavingsFragment.newInstance(R.layout.layout_savingstotal,application,intent.getStringExtra("Previous Activity"))
+                SAVINGS_FRAGMENT_CONTAINER_ID,
+                SavingsFragment.newInstance(R.layout.layout_savingstotal,application,previousActivity)
             ).commit()
 
         }

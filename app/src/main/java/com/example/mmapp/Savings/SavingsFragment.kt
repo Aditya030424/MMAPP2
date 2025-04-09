@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mmapp.AHome.Constants
 import com.example.mmapp.Counter.AppViewModelFactory
 import com.example.mmapp.Counter.JsonLog
 import com.example.mmapp.Counter.SharedViewModel
@@ -29,12 +30,16 @@ class SavingsFragment(val application:Application): Fragment() {
 
     private lateinit var saving:String
     val gson = GsonBuilder().setPrettyPrinting().create()
+    lateinit var message:JsonLog
+    lateinit var jsonString:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             layoutId=it.getInt(ARG_LAYOUT_ID)
-            previousActivity=it.getString("Previous Activity")
+            previousActivity=it.getString(ARG_PREVIOUS_ACTIVITY)
         }
+        val tag= Constants.TAG
         val appViewModelFactory = AppViewModelFactory(application)
         sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
 
@@ -42,9 +47,9 @@ class SavingsFragment(val application:Application): Fragment() {
         {
             if(it>0)
             {
-                val message= JsonLog("Scroll to New Item:$saving",it.toString().toInt(),previousActivity!!,false)
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking", jsonString)
+                message= JsonLog("Scroll to New Item:$saving",it.toString().toInt(),previousActivity!!,false)
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
             }
         }
     }
@@ -103,12 +108,13 @@ class SavingsFragment(val application:Application): Fragment() {
     companion object
     {
         const val ARG_LAYOUT_ID="layoutId"
+        const val ARG_PREVIOUS_ACTIVITY="Previous Activity"
         fun newInstance(layoutId:Int,application: Application,previousActivity:String?): SavingsFragment
         {
             val fragment = SavingsFragment(application)
             val args= Bundle()
             args.putInt(ARG_LAYOUT_ID,layoutId)
-            args.putString("Previous Activity",previousActivity)
+            args.putString(ARG_PREVIOUS_ACTIVITY,previousActivity)
             fragment.arguments=args
             return fragment
         }

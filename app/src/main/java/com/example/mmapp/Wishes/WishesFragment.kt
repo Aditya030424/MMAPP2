@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mmapp.AHome.Constants
 import com.example.mmapp.Counter.AppViewModelFactory
 import com.example.mmapp.Counter.JsonLog
 import com.example.mmapp.Counter.SharedViewModel
@@ -32,6 +33,7 @@ class WishesFragment(val application: Application):Fragment() {
         SavingsAndWishesViewModelFactory(repository,application)
     }
 
+
     val wishesAdapter= WishesAdapter({wishesEntity ->
         onItemClicked(wishesEntity)
     },{wishesEntity ->onItemClicked1(wishesEntity)})
@@ -39,23 +41,26 @@ class WishesFragment(val application: Application):Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             layoutId=it.getInt(ARG_LAYOUT_ID_WISHES)
-            previousActivity=it.getString("Previous Activity")
+            previousActivity=it.getString(ARG_PREVIOUS_ACTIVITY)
         }
+        val tag= Constants.TAG
         val gson=GsonBuilder().setPrettyPrinting().create()
         val appViewModelFactory = AppViewModelFactory(application)
+        lateinit var message:JsonLog
+        lateinit var jsonString:String
         sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
         sharedViewModel.counterCheckBox.observe(this) {
             if (it > 0) {
-                val message= JsonLog("CheckBox pressed",it.toString().toInt(),previousActivity!!,true)
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking", jsonString)
+                message= JsonLog("CheckBox pressed",it.toString().toInt(),previousActivity!!,true)
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
             }
         }
         sharedViewModel.counterPrefButton.observe(this) {
             if (it > 0) {
-                val message= JsonLog("Pref Button pressed",it.toString().toInt(),previousActivity!!,true)
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking", jsonString)
+                message= JsonLog("Pref Button pressed",it.toString().toInt(),previousActivity!!,true)
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
             }
         }
     }
@@ -91,9 +96,9 @@ class WishesFragment(val application: Application):Fragment() {
         else if(layoutId==R.layout.layout_wishestotal)
         {
             savingsAndWishesViewModel.getTotalWishesTransac()
+            val totalWishes1=view.findViewById<TextView>(R.id.wishesTotal)
             savingsAndWishesViewModel.totalWishes.observe(viewLifecycleOwner) { totalWishes ->
                 totalWishes?.let {
-                    val totalWishes1=view.findViewById<TextView>(R.id.wishesTotal)
                     totalWishes1.text=it.toString()
                 }
             }
@@ -119,12 +124,12 @@ class WishesFragment(val application: Application):Fragment() {
 
     companion object {
         private const val ARG_LAYOUT_ID_WISHES = "layoutId"
-
+        private const val ARG_PREVIOUS_ACTIVITY="Previous Activity"
         fun newInstance(layoutId: Int, application: Application,previousActivity:String?): WishesFragment {
             val fragment = WishesFragment(application)
             val args = Bundle()
             args.putInt(ARG_LAYOUT_ID_WISHES, layoutId)
-            args.putString("Previous Activity",previousActivity)
+            args.putString(ARG_PREVIOUS_ACTIVITY,previousActivity)
             fragment.arguments = args
             return fragment
         }
