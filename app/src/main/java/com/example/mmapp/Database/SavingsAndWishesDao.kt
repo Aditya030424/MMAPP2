@@ -37,6 +37,4 @@ interface SavingsAndWishesDao
     @Query("UPDATE wishes SET pref=pref+1 WHERE id=:id")
     suspend fun incrementPref(id: Int)
 
-//    @Query("UPDATE wishes SET pref=0")
-//    suspend fun dismissPref
 }

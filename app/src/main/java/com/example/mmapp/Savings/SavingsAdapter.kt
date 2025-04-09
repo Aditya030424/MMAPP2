@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mmapp.R
 
-class SavingsAdapter:ListAdapter<SavingsEntity, SavingsAdapter.SavingsViewHolder>(DiffCallback2())
+class SavingsAdapter(private val onScroll: (SavingsEntity)-> Unit):ListAdapter<SavingsEntity, SavingsAdapter.SavingsViewHolder>(DiffCallback2())
 {
     class DiffCallback2:DiffUtil.ItemCallback<SavingsEntity>()
     {
@@ -22,7 +22,7 @@ class SavingsAdapter:ListAdapter<SavingsEntity, SavingsAdapter.SavingsViewHolder
         }
     }
 
-    class SavingsViewHolder(view: View): RecyclerView.ViewHolder(view)
+    inner class SavingsViewHolder(view: View): RecyclerView.ViewHolder(view)
     {
         val savingsItemTv1=view.findViewById<TextView>(R.id.savingsItemTv1)
         val savingsItemTv2=view.findViewById<TextView>(R.id.savingsItemTv2)
@@ -32,6 +32,7 @@ class SavingsAdapter:ListAdapter<SavingsEntity, SavingsAdapter.SavingsViewHolder
 
             savingsItemTv1.text=item.deed
             savingsItemTv2.text="+"+item.amount.toString()
+            onScroll(item)
         }
     }
 

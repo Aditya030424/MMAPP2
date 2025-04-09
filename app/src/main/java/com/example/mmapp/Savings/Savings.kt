@@ -26,7 +26,7 @@ class Savings:AppCompatActivity() {
         sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
         supportFragmentManager.beginTransaction().add(
             R.id.savingsFragmentContainer,
-            SavingsFragment.newInstance(R.layout.layout_savingsrv,application)
+            SavingsFragment.newInstance(R.layout.layout_savingsrv,application,intent.getStringExtra("Previous Activity"))
         ).commit()
 
         val addSavingsButton=findViewById<Button>(R.id.addSavingsButton)
@@ -68,7 +68,7 @@ class Savings:AppCompatActivity() {
             savingsAndWishesViewModel.insertSavings(SavingsEntity(deed=deed,amount=amount))
             supportFragmentManager.beginTransaction().replace(
                 R.id.savingsFragmentContainer,
-                SavingsFragment.newInstance(R.layout.layout_savingsrv,application)
+                SavingsFragment.newInstance(R.layout.layout_savingsrv,application,intent.getStringExtra("Previous Activity"))
             ).commit()
         }
 
@@ -79,7 +79,7 @@ class Savings:AppCompatActivity() {
 
             supportFragmentManager.beginTransaction().replace(
                 R.id.savingsFragmentContainer,
-                SavingsFragment.newInstance(R.layout.layout_savingstotal,application)
+                SavingsFragment.newInstance(R.layout.layout_savingstotal,application,intent.getStringExtra("Previous Activity"))
             ).commit()
 
         }
