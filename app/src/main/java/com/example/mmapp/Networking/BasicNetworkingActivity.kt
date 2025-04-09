@@ -3,6 +3,7 @@ package com.example.mmapp.Networking
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -26,43 +27,26 @@ class BasicNetworkingActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_basicnetworking)
-        var geo:String?
-        val retrofit= Retrofit.Builder().baseUrl("https://api.ipify.org").addConverterFactory(GsonConverterFactory.create()).build()
-        val IpAcquiringApi=retrofit.create(IpAcquiringApi::class.java)
-        var ip1:String?=""
         val tag= Constants.TAG
-        val getIpButton1=findViewById<Button>(R.id.getIpButton1)
-        val sendIpButton=findViewById<Button>(R.id.sendIpButton)
-        val appViewModelFactory = AppViewModelFactory(application)
-        val gson = GsonBuilder().setPrettyPrinting().create()
         val previousActivity=intent.getStringExtra("Previous Activity")
-        sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
+        val gson = GsonBuilder().setPrettyPrinting().create()
+
         lateinit var message:JsonLog
         lateinit var jsonString:String
-        supportFragmentManager.beginTransaction().add(R.id.bnFragment,BasicNetworkingFragment.newInstance(R.layout.layout_basicnetworkingfragment,"")).commit()
-        sharedViewModel.counterBNA.observe(this) {
-            if (it > 0) {
-                message= JsonLog("BNA Opened",it.toString().toInt(),previousActivity!!,)
-                jsonString = gson.toJson(message)
-                Log.d(tag, jsonString)
-            }
-        }
-        sharedViewModel.countergetIpButton1.observe(this) {
-            if (it > 0) {
-                message= JsonLog("GetIp Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
-                jsonString = gson.toJson(message)
-                Log.d(tag, jsonString)
-            }
-        }
-        sharedViewModel.counterSendIpButton.observe(this) {
-            if (it > 0) {
-                message= JsonLog("SendIp Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
-                jsonString = gson.toJson(message)
-                Log.d(tag, jsonString)
-            }
-        }
+
+        var geo:String?
+        var ip1:String?=""
+
+        val retrofit= Retrofit.Builder().baseUrl("https://api.ipify.org").addConverterFactory(GsonConverterFactory.create()).build()
+        val IpAcquiringApi=retrofit.create(IpAcquiringApi::class.java)
+
+
+        val getIpButton1=findViewById<Button>(R.id.getIpButton1)
+        val sendIpButton=findViewById<Button>(R.id.sendIpButton)
+        val bnTv1=findViewById<TextView>(R.id.bnTv1)
+
         getIpButton1.setOnClickListener {
-            sharedViewModel.countergetIpButton1.value=sharedViewModel.countergetIpButton1.value?.plus(1)
+            sharedViewModel.counterGetIpButton1.value=sharedViewModel.counterGetIpButton1.value?.plus(1)
             lifecycleScope.launch(Dispatchers.IO) {
                 try {
                     ip1 = IpAcquiringApi.getIp().ip
@@ -70,16 +54,8 @@ class BasicNetworkingActivity:AppCompatActivity() {
                     ip1 = e.message
                 }
                 withContext(Dispatchers.Main) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(
-                            R.id.bnFragment,
-                            BasicNetworkingFragment.newInstance(
-                                R.layout.layout_basicnetworkingfragment,
-                                ip1!!
-                            )
-                        ).commit()
+                    bnTv1.text = ip1
                 }
-
             }
         }
 
@@ -97,18 +73,40 @@ class BasicNetworkingActivity:AppCompatActivity() {
                 }
                 
                 withContext(Dispatchers.Main) {
-                    supportFragmentManager.beginTransaction()
-                        .replace(
-                            R.id.bnFragment,
-                            BasicNetworkingFragment.newInstance(
-                                R.layout.layout_basicnetworkingfragment,
-                                geo!!
-                            )
-                        ).commit()
+                    bnTv1.text = geo
                 }
             }
         }
+
+        val appViewModelFactory = AppViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
+
+        sharedViewModel.counterBNA.observe(this) {
+            if (it > 0) {
+                message= JsonLog("BNA Opened",it.toString().toInt(),previousActivity!!,)
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
+            }
+        }
+
+        sharedViewModel.counterGetIpButton1.observe(this) {
+            if (it > 0) {
+                message= JsonLog("GetIp Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
+            }
+        }
+
+        sharedViewModel.counterSendIpButton.observe(this) {
+            if (it > 0) {
+                message= JsonLog("SendIp Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
+            }
+        }
     }
+
+
     override fun onResume()
     {
         super.onResume()

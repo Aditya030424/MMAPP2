@@ -9,17 +9,17 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val counterSavingsButton:MutableLiveData<Int> = _counterSavingsButton
     private var _counterWishesButton:MutableLiveData<Int> = MutableLiveData(0)
     val counterWishesButton=_counterWishesButton
-    private var _countergetIpButton:MutableLiveData<Int> = MutableLiveData(0)
-    val countergetIpButton=_countergetIpButton
-    private var _counterpostApiButton:MutableLiveData<Int> = MutableLiveData(0)
-    val counterpostApiButton=_counterpostApiButton
+    private var _counterGetIpButton:MutableLiveData<Int> = MutableLiveData(0)
+    val counterGetIpButton=_counterGetIpButton
+    private var _counterPostApiButton:MutableLiveData<Int> = MutableLiveData(0)
+    val counterPostApiButton=_counterPostApiButton
     private var _counterHome:MutableLiveData<Int> = MutableLiveData(0)
     val counterHome=_counterHome
 
     private var _counterSendIpButton:MutableLiveData<Int> = MutableLiveData(0)
     val counterSendIpButton=_counterSendIpButton
-    private var _countergetIpButton1:MutableLiveData<Int> = MutableLiveData(0)
-    val countergetIpButton1 =_countergetIpButton1
+    private var _counterGetIpButton1:MutableLiveData<Int> = MutableLiveData(0)
+    val counterGetIpButton1 =_counterGetIpButton1
     private var _counterBNA:MutableLiveData<Int> = MutableLiveData(0)
     val counterBNA=_counterBNA
 
@@ -51,6 +51,4 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val counterPrefButton=_counterPrefButton
     private var _counterCheckBox:MutableLiveData<Int> = MutableLiveData(0)
     val counterCheckBox=_counterCheckBox
-
-
 }

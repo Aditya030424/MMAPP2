@@ -3,10 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <androidx.fragment.app.FragmentContainerView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:id="@+id/bnFragment"/>
+        android:id="@+id/bnTv1"
+        android:layout_gravity="center"
+        android:gravity="center"/>
 
     <Button
         android:layout_width="match_parent"

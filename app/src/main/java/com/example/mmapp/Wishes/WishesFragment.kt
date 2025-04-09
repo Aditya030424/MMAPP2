@@ -27,27 +27,29 @@ class WishesFragment(val application: Application):Fragment() {
     private var layoutId: Int? = null
     private var previousActivity:String?=null
     private lateinit var sharedViewModel: SharedViewModel
+
     val savingsAndWishesDB= SavingsAndWishesDB.getInstance(application)
     val repository= SavingsAndWishesRepository(savingsAndWishesDB.savingsAndWishesDao())
     val savingsAndWishesViewModel by viewModels<SavingsAndWishesViewModel> {
         SavingsAndWishesViewModelFactory(repository,application)
     }
 
+    val wishesAdapter= WishesAdapter({wishesEntity -> onItemClicked(wishesEntity) },{wishesEntity ->onItemClicked1(wishesEntity)})
 
-    val wishesAdapter= WishesAdapter({wishesEntity ->
-        onItemClicked(wishesEntity)
-    },{wishesEntity ->onItemClicked1(wishesEntity)})
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             layoutId=it.getInt(ARG_LAYOUT_ID_WISHES)
             previousActivity=it.getString(ARG_PREVIOUS_ACTIVITY)
         }
+
         val tag= Constants.TAG
         val gson=GsonBuilder().setPrettyPrinting().create()
         val appViewModelFactory = AppViewModelFactory(application)
         lateinit var message:JsonLog
         lateinit var jsonString:String
+
         sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
         sharedViewModel.counterCheckBox.observe(this) {
             if (it > 0) {
@@ -64,6 +66,7 @@ class WishesFragment(val application: Application):Fragment() {
             }
         }
     }
+
     fun clearChecked()
     {
         val list1=savingsAndWishesViewModel.allWishes.value?.filter { !it.checked }
@@ -110,12 +113,12 @@ class WishesFragment(val application: Application):Fragment() {
         if(wishesEntity.checked)
         {
             savingsAndWishesViewModel.updateCheckedTo0(wishesEntity)
-
         }
         else {
             savingsAndWishesViewModel.updateCheckedTo1(wishesEntity)
         }
     }
+
     fun onItemClicked1(wishesEntity: WishesEntity) {
         sharedViewModel.counterPrefButton.value = sharedViewModel.counterPrefButton.value?.plus(1)
         savingsAndWishesViewModel.incrementPref(wishesEntity)

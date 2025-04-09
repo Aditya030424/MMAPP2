@@ -26,25 +26,48 @@ class Wishes : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_wishes)
-        val previousActivity=intent.getStringExtra("Previous Activity")
-        val appViewModelFactory = AppViewModelFactory(application)
-        sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
-        val fragment=WishesFragment.newInstance(R.layout.layout_wishesrv,application,previousActivity)
-        supportFragmentManager.beginTransaction().add(WISHES_FRAGMENT_CONTAINER_ID,fragment).commit()
         lateinit var message:JsonLog
         lateinit var jsonString:String
         val tag= Constants.TAG
+        val previousActivity=intent.getStringExtra("Previous Activity")
+
         val addWishButton = findViewById<Button>(R.id.addWishButton)
         val showTotal = findViewById<Button>(R.id.showTotal)
         val clear = findViewById<Button>(R.id.clear)
         val wishAmountEditText = findViewById<EditText>(R.id.wishAmount)
+        val wishEditText=findViewById<EditText>(R.id.wish)
+
+        val fragment=WishesFragment.newInstance(R.layout.layout_wishesrv,application,previousActivity)
+        supportFragmentManager.beginTransaction().add(WISHES_FRAGMENT_CONTAINER_ID,fragment).commit()
+
+        val appViewModelFactory = AppViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
         val gson = GsonBuilder().setPrettyPrinting().create()
+
         val savingsAndWishesDB = SavingsAndWishesDB.getInstance(this)
         val repository = SavingsAndWishesRepository(savingsAndWishesDB.savingsAndWishesDao())
         val savingsAndWishesViewModel by viewModels<SavingsAndWishesViewModel> {
             SavingsAndWishesViewModelFactory(repository, application)
         }
-        val wishEditText=findViewById<EditText>(R.id.wish)
+
+        addWishButton.setOnClickListener {
+            sharedViewModel.counterAddWishes.value = sharedViewModel.counterAddWishes.value?.plus(1)
+            val wish = wishEditText.text.toString()
+            val wishAmount = wishAmountEditText.text.toString().toInt()
+            savingsAndWishesViewModel.insertWishes(WishesEntity(wish = wish, amount = wishAmount, checked = false))
+            supportFragmentManager.beginTransaction().replace(WISHES_FRAGMENT_CONTAINER_ID, fragment).commit()
+        }
+
+        clear.setOnClickListener {
+            sharedViewModel.counterClearWishes.value = sharedViewModel.counterClearWishes.value?.plus(1)
+            fragment.clearChecked()
+            supportFragmentManager.beginTransaction().replace(WISHES_FRAGMENT_CONTAINER_ID, fragment).commit()
+        }
+
+        showTotal.setOnClickListener {
+            sharedViewModel.counterShowTotalWishes.value = sharedViewModel.counterShowTotalWishes.value?.plus(1)
+            supportFragmentManager.beginTransaction().replace(WISHES_FRAGMENT_CONTAINER_ID, WishesFragment.newInstance(R.layout.layout_wishestotal, application,intent.getStringExtra("Previous Activity"))             ).commit()
+        }
 
         sharedViewModel.counterWishes.observe(this) {
             if (it > 0) {
@@ -73,25 +96,6 @@ class Wishes : AppCompatActivity() {
                 jsonString = gson.toJson(message)
                 Log.d(tag, jsonString)
             }
-        }
-
-        addWishButton.setOnClickListener {
-            sharedViewModel.counterAddWishes.value = sharedViewModel.counterAddWishes.value?.plus(1)
-            val wish = wishEditText.text.toString()
-            val wishAmount = wishAmountEditText.text.toString().toInt()
-            savingsAndWishesViewModel.insertWishes(WishesEntity(wish = wish, amount = wishAmount, checked = false))
-            supportFragmentManager.beginTransaction().replace(WISHES_FRAGMENT_CONTAINER_ID, fragment).commit()
-        }
-
-        clear.setOnClickListener {
-            sharedViewModel.counterClearWishes.value = sharedViewModel.counterClearWishes.value?.plus(1)
-            fragment.clearChecked()
-            supportFragmentManager.beginTransaction().replace(WISHES_FRAGMENT_CONTAINER_ID, fragment).commit()
-        }
-
-        showTotal.setOnClickListener {
-            sharedViewModel.counterShowTotalWishes.value = sharedViewModel.counterShowTotalWishes.value?.plus(1)
-            supportFragmentManager.beginTransaction().replace(WISHES_FRAGMENT_CONTAINER_ID, WishesFragment.newInstance(R.layout.layout_wishestotal, application,intent.getStringExtra("Previous Activity"))             ).commit()
         }
     }
 

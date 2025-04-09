@@ -24,12 +24,11 @@ class SavingsAdapter(private val onScroll: (SavingsEntity)-> Unit):ListAdapter<S
 
     inner class SavingsViewHolder(view: View): RecyclerView.ViewHolder(view)
     {
-            val savingsItemTv1 = view.findViewById<TextView>(R.id.savingsItemTv1)
-            val savingsItemTv2 = view.findViewById<TextView>(R.id.savingsItemTv2)
+        val savingsItemTv1 = view.findViewById<TextView>(R.id.savingsItemTv1)
+        val savingsItemTv2 = view.findViewById<TextView>(R.id.savingsItemTv2)
 
         fun bind(item: SavingsEntity)
         {
-
             savingsItemTv1.text=item.deed
             savingsItemTv2.text="+"+item.amount.toString()
             onScroll(item)

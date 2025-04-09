@@ -21,8 +21,8 @@ class WishesAdapter(private val onItemClicked: (WishesEntity) -> Unit,private va
             return oldItem==newItem
 
         }
-
     }
+
     inner class WishesViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val wishesItemTv1=view.findViewById<TextView>(R.id.wishesItemTv1)
         val wishesItemTv2=view.findViewById<TextView>(R.id.wishesItemTv2)
@@ -45,18 +45,14 @@ class WishesAdapter(private val onItemClicked: (WishesEntity) -> Unit,private va
         }
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishesViewHolder {
         val view=LayoutInflater.from(parent.context).inflate(R.layout.layout_itemwishes,parent,false)
         return WishesViewHolder(view)
-
-
     }
 
     override fun onBindViewHolder(holder: WishesViewHolder, position: Int) {
        val item=getItem(position)
         holder.bind(item)
-
     }
 
 }
