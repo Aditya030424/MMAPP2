@@ -20,7 +20,6 @@ class HomeA:AppCompatActivity(){
     private lateinit var sharedViewModel: SharedViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val HomeA:HomeA?=null
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         val appViewModelFactory = AppViewModelFactory(application)
@@ -33,21 +32,21 @@ class HomeA:AppCompatActivity(){
         val gson = GsonBuilder().setPrettyPrinting().create()
         sharedViewModel.counterSavingsButton.observe(this) {
             if(it>0) {
-                val message= JsonLog("SavingsButton pressed",it.toString().toInt(),"No Previous Activity")
+                val message= JsonLog("SavingsButton pressed",it.toInt(),"No Previous Activity")
                 val jsonString = gson.toJson(message)
             Log.d("Tracking",jsonString)
             }
         }
         sharedViewModel.counterWishesButton.observe(this) {
             if(it>0) {
-                val message= JsonLog("WishesButton pressed",it.toString().toInt(),"No Previous Activity")
+                val message= JsonLog("WishesButton pressed",it.toInt(),"No Previous Activity")
                 val jsonString = gson.toJson(message)
             Log.d("Tracking",jsonString)
             }
         }
         sharedViewModel.countergetIpButton.observe(this) {
             if(it>0) {
-                val message= JsonLog("GetIpButton pressed",it.toString().toInt(),"No Previous Activity")
+                val message= JsonLog("GetIpButton pressed",it.toInt(),"No Previous Activity")
                 val jsonString = gson.toJson(message)
             Log.d("Tracking",jsonString)
             }
@@ -55,14 +54,14 @@ class HomeA:AppCompatActivity(){
 
         sharedViewModel.counterpostApiButton.observe(this) {
             if(it>0) {
-                val message= JsonLog("PostApiButton pressed",it.toString().toInt(),"No Previous Activity")
+                val message= JsonLog("PostApiButton pressed",it.toInt(),"No Previous Activity")
                 val jsonString = gson.toJson(message)
             Log.d("Tracking",jsonString)
             }
         }
         sharedViewModel.counterHome.observe(this) {
             if(it>0) {
-                val message= JsonLog("Home Activity Opened",it.toString().toInt(),"No Previous Activity")
+                val message= JsonLog("Home Activity Opened",it.toInt(),"No Previous Activity")
                 val jsonString = gson.toJson(message)
                 Log.d("Tracking", jsonString)
             }
@@ -95,9 +94,8 @@ class HomeA:AppCompatActivity(){
             startActivity(intent)
             sharedViewModel.counterpostApiButton.value=sharedViewModel.counterpostApiButton.value?.plus(1)
         }
-
-
     }
+
     override fun onResume()
     {
         super.onResume()

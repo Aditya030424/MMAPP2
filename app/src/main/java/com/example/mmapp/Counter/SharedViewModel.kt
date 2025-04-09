@@ -2,7 +2,6 @@ package com.example.mmapp.Counter
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
@@ -52,6 +51,5 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val counterCheckBox=_counterCheckBox
     private var _counterSavingsScroll:MutableLiveData<Int> = MutableLiveData(0)
     val counterSavingsScroll:MutableLiveData<Int> = _counterSavingsScroll
-    private var _counterWishesScroll:MutableLiveData<Int> = MutableLiveData(0)
-    val counterWishesScroll:MutableLiveData<Int> = _counterWishesScroll
+
 }
