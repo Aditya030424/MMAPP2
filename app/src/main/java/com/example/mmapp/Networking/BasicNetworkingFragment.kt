@@ -13,7 +13,6 @@ import com.example.mmapp.R
 class BasicNetworkingFragment:Fragment() {
     private var layoutId:Int?=null
     private var output:String?=null
-    //val intent=Intent.makeMainSelectorActivity(Intent.ACTION_MAIN,Intent.CATEGORY_APP_MUSIC)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

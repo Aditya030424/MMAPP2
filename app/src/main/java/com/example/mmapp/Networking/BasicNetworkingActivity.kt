@@ -7,6 +7,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.mmapp.AHome.Constants
 import com.example.mmapp.Counter.AppViewModelFactory
 import com.example.mmapp.Counter.JsonLog
 import com.example.mmapp.Counter.SharedViewModel
@@ -25,39 +26,39 @@ class BasicNetworkingActivity:AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_basicnetworking)
-        var geo:String?=""
+        var geo:String?
         val retrofit= Retrofit.Builder().baseUrl("https://api.ipify.org").addConverterFactory(GsonConverterFactory.create()).build()
         val IpAcquiringApi=retrofit.create(IpAcquiringApi::class.java)
         var ip1:String?=""
+        val tag= Constants.TAG
         val getIpButton1=findViewById<Button>(R.id.getIpButton1)
         val sendIpButton=findViewById<Button>(R.id.sendIpButton)
         val appViewModelFactory = AppViewModelFactory(application)
         val gson = GsonBuilder().setPrettyPrinting().create()
         val previousActivity=intent.getStringExtra("Previous Activity")
         sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
+        lateinit var message:JsonLog
+        lateinit var jsonString:String
         supportFragmentManager.beginTransaction().add(R.id.bnFragment,BasicNetworkingFragment.newInstance(R.layout.layout_basicnetworkingfragment,"")).commit()
         sharedViewModel.counterBNA.observe(this) {
             if (it > 0) {
-                val message= JsonLog("BNA Opened",it.toString().toInt(),previousActivity!!,)
-                val jsonString = gson.toJson(message)
-
-                Log.d("Tracking", jsonString)
+                message= JsonLog("BNA Opened",it.toString().toInt(),previousActivity!!,)
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
             }
         }
         sharedViewModel.countergetIpButton1.observe(this) {
             if (it > 0) {
-                val message= JsonLog("GetIp Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking", jsonString)
-
-
-        }
+                message= JsonLog("GetIp Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
             }
+        }
         sharedViewModel.counterSendIpButton.observe(this) {
             if (it > 0) {
-                val message= JsonLog("SendIp Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking", jsonString)
+                message= JsonLog("SendIp Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
             }
         }
         getIpButton1.setOnClickListener {
