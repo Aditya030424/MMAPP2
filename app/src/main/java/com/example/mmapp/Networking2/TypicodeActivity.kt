@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.util.Log
 
 import android.widget.Button
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.mmapp.AHome.Constants
 import com.example.mmapp.Counter.AppViewModelFactory
 import com.example.mmapp.Counter.JsonLog
 import com.example.mmapp.Counter.SharedViewModel
@@ -19,55 +21,70 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TypicodeActivity:AppCompatActivity() {
     private lateinit var sharedViewModel: SharedViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_typicode)
-        val appViewModelFactory = AppViewModelFactory(application)
-        sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
-        val postInfoButton=findViewById<Button>(R.id.postInfoButton)
-        val getInfoButton=findViewById<Button>(R.id.getInfoButton)
+        lateinit var message:JsonLog
+        lateinit var jsonString:String
+        val tag= Constants.TAG
+
         val previousActivity=intent.getStringExtra("Previous Activity")
         val gson = GsonBuilder().setPrettyPrinting().create()
+
+        val postInfoButton=findViewById<Button>(R.id.postInfoButton)
+        val getInfoButton=findViewById<Button>(R.id.getInfoButton)
+        val typicodeTv=findViewById<TextView>(R.id.typicodeTv)
+
         val postViewModel:PostViewModel by viewModels()
-        sharedViewModel.counterTypicode.observe(this) {
-            if (it > 0) {
-                val message= JsonLog("Typicode Activity Opened",it.toString().toInt(),previousActivity!!)
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking",jsonString)
-            }
-        }
-        sharedViewModel.counterPostInfo.observe(this) {
-            if (it > 0) {
-                val message= JsonLog("PostInfo Button pressed",it.toString().toInt(),previousActivity!!,false,"POST")
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking",jsonString)
-            }
-        }
-        sharedViewModel.counterGetInfo.observe(this) {
-            if (it > 0) {
-                val message= JsonLog("GetInfo Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
-                val jsonString = gson.toJson(message)
-                Log.d("Tracking", jsonString)
-            }
-        }
-        postViewModel.posts.observe(this) { response ->
-            supportFragmentManager.beginTransaction().replace(R.id.typicodeFragmentContainer,TypicodeFragment.newInstance(R.layout.layout_postinfo,response.toString()))
-                .commit()
-            Log.d("Response","Textview updated")
-        }
+
+        val appViewModelFactory = AppViewModelFactory(application)
+        sharedViewModel = ViewModelProvider(this, appViewModelFactory)[SharedViewModel::class.java]
+
         postInfoButton.setOnClickListener {
             sharedViewModel.counterPostInfo.value=sharedViewModel.counterPostInfo.value?.plus(1)
             postViewModel.createPost(PostRequest(1, "New Title", "New Body"))
         }
-        postViewModel.gets.observe(this) { response ->
-            supportFragmentManager.beginTransaction().replace(R.id.typicodeFragmentContainer,TypicodeFragment.newInstance(R.layout.layout_getinfo,response.toString()))
-                .commit()
-        }
+
         getInfoButton.setOnClickListener {
             sharedViewModel.counterGetInfo.value=sharedViewModel.counterGetInfo.value?.plus(1)
             postViewModel.getPosts()
         }
+
+        postViewModel.gets.observe(this) { response ->
+            typicodeTv.text = response.toString()
+        }
+
+        postViewModel.posts.observe(this) { response ->
+            typicodeTv.text = response.toString()
+            Log.d("Response","Textview updated")
+        }
+
+        sharedViewModel.counterTypicode.observe(this) {
+            if (it > 0) {
+                message= JsonLog("Typicode Activity Opened",it.toString().toInt(),previousActivity!!)
+                jsonString = gson.toJson(message)
+                Log.d(tag,jsonString)
+            }
+        }
+        sharedViewModel.counterPostInfo.observe(this) {
+            if (it > 0) {
+                message= JsonLog("PostInfo Button pressed",it.toString().toInt(),previousActivity!!,false,"POST")
+                jsonString = gson.toJson(message)
+                Log.d(tag,jsonString)
+            }
+        }
+        sharedViewModel.counterGetInfo.observe(this) {
+            if (it > 0) {
+                message= JsonLog("GetInfo Button pressed",it.toString().toInt(),previousActivity!!,false,"GET")
+                jsonString = gson.toJson(message)
+                Log.d(tag, jsonString)
+            }
+        }
     }
+
+
+
     override fun onResume()
     {
         super.onResume()

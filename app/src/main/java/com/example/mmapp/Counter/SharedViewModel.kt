@@ -2,7 +2,6 @@ package com.example.mmapp.Counter
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
@@ -10,17 +9,17 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val counterSavingsButton:MutableLiveData<Int> = _counterSavingsButton
     private var _counterWishesButton:MutableLiveData<Int> = MutableLiveData(0)
     val counterWishesButton=_counterWishesButton
-    private var _countergetIpButton:MutableLiveData<Int> = MutableLiveData(0)
-    val countergetIpButton=_countergetIpButton
-    private var _counterpostApiButton:MutableLiveData<Int> = MutableLiveData(0)
-    val counterpostApiButton=_counterpostApiButton
+    private var _counterGetIpButton:MutableLiveData<Int> = MutableLiveData(0)
+    val counterGetIpButton=_counterGetIpButton
+    private var _counterPostApiButton:MutableLiveData<Int> = MutableLiveData(0)
+    val counterPostApiButton=_counterPostApiButton
     private var _counterHome:MutableLiveData<Int> = MutableLiveData(0)
     val counterHome=_counterHome
 
     private var _counterSendIpButton:MutableLiveData<Int> = MutableLiveData(0)
     val counterSendIpButton=_counterSendIpButton
-    private var _countergetIpButton1:MutableLiveData<Int> = MutableLiveData(0)
-    val countergetIpButton1 =_countergetIpButton1
+    private var _counterGetIpButton1:MutableLiveData<Int> = MutableLiveData(0)
+    val counterGetIpButton1 =_counterGetIpButton1
     private var _counterBNA:MutableLiveData<Int> = MutableLiveData(0)
     val counterBNA=_counterBNA
 
@@ -37,6 +36,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     val counterShowTotal=_counterShowTotal
     private var _counterSavings:MutableLiveData<Int> = MutableLiveData(0)
     val counterSavings=_counterSavings
+    private var _counterSavingsScroll:MutableLiveData<Int> = MutableLiveData(0)
+    val counterSavingsScroll:MutableLiveData<Int> = _counterSavingsScroll
 
     private var _counterAddWishes:MutableLiveData<Int> = MutableLiveData(0)
     val counterAddWishes=_counterAddWishes
